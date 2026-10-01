@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- SEO Meta Tags -->
-  <title>OmniInterview - AI-Powered Job Interview Simulator & Career Prep Platform</title>
-  <meta name="description" content="Practice common job interview questions tailored to specific roles and companies, simulate real-time timers, record answers, and boost your hiring success.">
-  <meta name="keywords" content="job interview simulator, mock interview practice, hr interview questions, tech interview prep, behavioral interview app">
+  <title>OmniInterview - AI-Powered Job Interview Simulator & Psychometric Testing Platform</title>
+  <meta name="description" content="Practice job interviews tailored to specific roles, industries, and companies, plus numerical and logical reasoning psychometric tests.">
+  <meta name="keywords" content="job interview simulator, psychometric test, numerical reasoning test, logical reasoning, mock interview practice">
   <meta name="author" content="OmniInterview Editorial Team">
   <meta name="robots" content="index, follow">
   <meta name="geo.region" content="US">
@@ -79,7 +79,10 @@
       </a>
 
       <div class="flex items-center gap-3">
-        <a href="#study-guides" class="hidden sm:inline-flex text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">📚 Career Guides</a>
+        <div class="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-bold">
+          <button onclick="switchAppMode('interview')" id="modeInterviewBtn" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow">Mock Interview</button>
+          <button onclick="switchAppMode('psychometric')" id="modePsychBtn" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition">Psychometric Tests</button>
+        </div>
         <button onclick="toggleDarkMode()" class="p-2.5 rounded-2xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-white dark:hover:bg-slate-700 transition shadow-inner">
           <span id="themeIcon">🌙</span>
         </button>
@@ -92,62 +95,93 @@
     
     <!-- HEADER HERO -->
     <div class="text-center space-y-3">
-      <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 px-4 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800 inline-block shadow-sm">AI & Real-Time Mock Interview Simulator</span>
+      <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 px-4 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800 inline-block shadow-sm">Global Hiring Prep Platform</span>
       <h1 class="text-3xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-        Ace Your Next Job Interview <span class="gradient-text">with Confidence.</span>
+        Master Interviews & <span class="gradient-text">Psychometric Tests.</span>
       </h1>
       <p class="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto font-medium">
-        Select your target role and company, listen to interview questions, practice your responses, and review expert evaluation benchmarks.
+        Choose your industry, role, and target company to simulate professional interviews or practice numerical & logical reasoning tests.
       </p>
     </div>
 
-    <!-- CATEGORY SELECTOR BAR -->
-    <div id="categoryBar" class="flex flex-wrap justify-center gap-2">
-      <button onclick="selectCategory('behavioral')" id="cat-behavioral" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow-md transition">Behavioral (HR)</button>
-      <button onclick="selectCategory('technical')" id="cat-technical" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition">Technical / Coding</button>
-      <button onclick="selectCategory('leadership')" id="cat-leadership" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition">Leadership & Management</button>
-      <button onclick="selectCategory('systemDesign')" id="cat-systemDesign" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition">System Design</button>
-    </div>
-
-    <!-- SIMULATOR VIEW -->
-    <div id="simulatorView" class="pastel-card p-8 md:p-10 rounded-3xl space-y-6">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 dark:border-slate-700 pb-4 gap-3">
-        <div>
-          <h2 id="categoryTitle" class="font-extrabold text-base text-slate-900 dark:text-white">Behavioral Interview Simulator</h2>
-          <p id="targetDetails" class="text-xs text-slate-500">Target Role: Software Engineer | Company: Google</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <button onclick="speakQuestion()" class="flex items-center gap-1 text-xs font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition">
-            🔊 Listen Question
-          </button>
-          <span id="qCount" class="text-xs font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">Ready</span>
-        </div>
-      </div>
-
-      <!-- START SCREEN WITH CUSTOM ROLE & COMPANY INPUT -->
-      <div id="startScreen" class="text-center py-8 space-y-6 max-w-lg mx-auto">
-        <div class="text-5xl">🎯</div>
-        <div class="space-y-2">
-          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Customize Your Mock Interview</h3>
-          <p class="text-xs text-slate-500">Enter your target job title and company to tailor the simulation experience.</p>
+    <!-- MOCK INTERVIEW MODE CONTAINER -->
+    <div id="interviewAppContainer" class="space-y-8">
+      
+      <!-- START CONFIGURATION CARD -->
+      <div id="startScreen" class="pastel-card p-8 md:p-10 rounded-3xl space-y-6 max-w-xl mx-auto">
+        <div class="text-center space-y-2">
+          <div class="text-4xl">🎯</div>
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Configure Your Interview Session</h3>
+          <p class="text-xs text-slate-500">Select industry, role, and company parameters to customize your questions.</p>
         </div>
         
-        <div class="space-y-4 text-left">
+        <div class="space-y-4">
+          <!-- Industry Dropdown -->
           <div>
-            <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Job Title / Role:</label>
-            <input type="text" id="inputRole" value="Software Engineer" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+            <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Industry:</label>
+            <select id="selectIndustry" onchange="handleIndustryChange()" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+              <option value="Technology">Technology & Software</option>
+              <option value="Finance">Finance & Banking</option>
+              <option value="Consulting">Management Consulting</option>
+              <option value="Healthcare">Healthcare & Biotech</option>
+              <option value="Retail">Retail & E-Commerce</option>
+              <option value="Others">Others (Custom Industry)</option>
+            </select>
+            <input type="text" id="customIndustry" placeholder="Enter custom industry..." class="hidden w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
           </div>
+
+          <!-- Role Dropdown -->
+          <div>
+            <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Role / Position:</label>
+            <select id="selectRole" onchange="handleRoleChange()" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+              <option value="Software Engineer">Software Engineer</option>
+              <option value="Product Manager">Product Manager</option>
+              <option value="Data Analyst">Data Analyst / Scientist</option>
+              <option value="Financial Analyst">Financial Analyst</option>
+              <option value="Marketing Specialist">Marketing Specialist</option>
+              <option value="HR Generalist">HR Generalist</option>
+              <option value="Operations Manager">Operations Manager</option>
+              <option value="Others">Others (Custom Role)</option>
+            </select>
+            <input type="text" id="customRole" placeholder="Enter custom job title..." class="hidden w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+          </div>
+
+          <!-- Company Dropdown -->
           <div>
             <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Company:</label>
-            <input type="text" id="inputCompany" value="Google" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+            <select id="selectCompany" onchange="handleCompanyChange()" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+              <option value="Google">Google</option>
+              <option value="Microsoft">Microsoft</option>
+              <option value="Amazon">Amazon</option>
+              <option value="Apple">Apple</option>
+              <option value="Goldman Sachs">Goldman Sachs</option>
+              <option value="McKinsey & Company">McKinsey & Company</option>
+              <option value="Tesla">Tesla</option>
+              <option value="Startup / General">General Startup / Enterprise</option>
+              <option value="Others">Others (Custom Company)</option>
+            </select>
+            <input type="text" id="customCompany" placeholder="Enter target company name..." class="hidden w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
           </div>
         </div>
 
-        <button onclick="startInterviewSession()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/30">Start Customized Mock Interview</button>
+        <button onclick="startInterviewSession()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/35">Start Mock Interview Session</button>
       </div>
 
       <!-- ACTIVE INTERVIEW BOX -->
-      <div id="quizBox" class="hidden space-y-6">
+      <div id="quizBox" class="hidden pastel-card p-8 md:p-10 rounded-3xl space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 dark:border-slate-700 pb-4 gap-3">
+          <div>
+            <h2 id="sessionHeaderTitle" class="font-extrabold text-base text-slate-900 dark:text-white">Role-Specific Interview Simulator</h2>
+            <p id="targetDetails" class="text-xs text-slate-500">Role: Software Engineer | Company: Google</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="speakQuestion()" class="flex items-center gap-1 text-xs font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition">
+              🔊 Listen Question
+            </button>
+            <span id="qCount" class="text-xs font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">Ready</span>
+          </div>
+        </div>
+
         <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-slate-900/50 border border-indigo-100 dark:border-slate-800">
           <span id="targetBadge" class="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Interviewer Prompt</span>
           <h3 id="qText" class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-1"></h3>
@@ -162,63 +196,74 @@
           <button onclick="toggleRecordMock()" id="recordBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 border border-rose-200 text-xs font-extrabold hover:bg-rose-100 transition">
             🔴 Start Voice Recording
           </button>
-          <button onclick="submitAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-md">Submit & View Tips →</button>
+          <button onclick="submitAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-md">Submit & View Benchmark Tips →</button>
         </div>
       </div>
 
       <!-- FEEDBACK / TIPS BANNER -->
-      <div id="explanationBox" class="hidden p-5 rounded-2xl bg-emerald-50/70 dark:bg-slate-900/80 border border-emerald-200 dark:border-emerald-900 space-y-2">
+      <div id="explanationBox" class="hidden pastel-card p-6 rounded-3xl border border-emerald-200 dark:border-emerald-900 space-y-3">
         <div class="flex items-center gap-2 font-bold text-xs text-emerald-700 dark:text-emerald-300">
-          <span>💡</span> Expert Answer Benchmark & Tips:
+          <span>💡</span> Expert Answer Benchmark & Role Evaluation Tips:
         </div>
         <p id="explanationText" class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
-        <button onclick="nextQuestion()" class="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition">Next Question →</button>
+        <button onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition">Next Question →</button>
       </div>
 
       <!-- FINISH SCREEN -->
-      <div id="resBox" class="hidden text-center space-y-6 py-6">
+      <div id="resBox" class="hidden pastel-card p-8 rounded-3xl text-center space-y-6">
         <div class="text-5xl">🏆</div>
         <h3 class="text-2xl font-black text-slate-900 dark:text-white">Interview Session Completed!</h3>
         <p id="scoreText" class="text-slate-600 dark:text-slate-300 font-medium text-sm"></p>
-        <button onclick="resetToStartScreen()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/30">Start New Session</button>
+        <button onclick="resetToStartScreen()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/35">Start New Session</button>
       </div>
     </div>
 
-    <!-- KNOWLEDGE HUB / CAREER GUIDES SECTION -->
-    <section id="study-guides" class="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-6">
-      <div class="text-center space-y-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Expert Resources</span>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">Career Guides & Interview Tips</h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        <!-- Artikel 1 -->
-        <div class="pastel-card p-6 rounded-3xl flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer border border-slate-200 group" onclick="alert('Full STAR method masterclass guide loaded.')">
+    <!-- PSYCHOMETRIC TEST MODE CONTAINER -->
+    <div id="psychometricAppContainer" class="hidden space-y-8">
+      <div class="pastel-card p-8 md:p-10 rounded-3xl space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 dark:border-slate-700 pb-4 gap-3">
           <div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">Masterclass</span>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white mt-2 group-hover:text-indigo-600 transition">How to Master Behavioral Questions Using the STAR Method</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">Learn the structured framework to deliver compelling, impactful stories during HR and hiring manager interviews.</p>
+            <h2 class="font-extrabold text-base text-slate-900 dark:text-white">Job Placement Psychometric Test</h2>
+            <p class="text-xs text-slate-500">Numerical reasoning & logical problem solving assessment</p>
           </div>
-          <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-extrabold text-indigo-600 dark:text-indigo-400">
-            <span>Read Guide →</span>
-            <span>5 min read</span>
-          </div>
+          <span id="psychCount" class="text-xs font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-full">Question 1 of 4</span>
         </div>
 
-        <!-- Artikel 2 -->
-        <div class="pastel-card p-6 rounded-3xl flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer border border-slate-200 group" onclick="window.open('https://outlierkit.com/ref/8FNGN6', '_blank')">
-          <div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300">Productivity Partner</span>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white mt-2 group-hover:text-violet-600 transition">Streamline Your Job Applications & Interview Schedules</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">Manage your career pipeline and interview prep tasks efficiently using professional workflows from OutlierKit.</p>
+        <!-- PSYCH START -->
+        <div id="psychStartScreen" class="text-center py-8 space-y-5 max-w-md mx-auto">
+          <div class="text-5xl">📊</div>
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Ready for Psychometric Assessment?</h3>
+          <p class="text-xs text-slate-500">This module evaluates numerical data interpretation, pattern recognition, and logical deduction used by top recruiters.</p>
+          <button onclick="startPsychTest()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/35">Start Psych Test</button>
+        </div>
+
+        <!-- PSYCH QUIZ BOX -->
+        <div id="psychQuizBox" class="hidden space-y-6">
+          <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-slate-900/50 border border-indigo-100 dark:border-slate-800">
+            <span id="psychCategoryTag" class="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Numerical Reasoning</span>
+            <h3 id="psychQText" class="font-bold text-base md:text-lg text-slate-800 dark:text-slate-100 mt-1"></h3>
           </div>
-          <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-extrabold text-violet-600 dark:text-violet-400">
-            <span>Explore OutlierKit →</span>
-            <span>Partner</span>
+          <div id="psychOptsBox" class="space-y-3"></div>
+        </div>
+
+        <!-- PSYCH EXPLANATION -->
+        <div id="psychExplanationBox" class="hidden p-5 rounded-2xl bg-emerald-50/70 dark:bg-slate-900/80 border border-emerald-200 dark:border-emerald-900 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-xs text-emerald-700 dark:text-emerald-300">
+            <span>💡</span> Answer Explanation & Logic:
           </div>
+          <p id="psychExplanationText" class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+          <button onclick="nextPsychQuestion()" class="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition">Next Question →</button>
+        </div>
+
+        <!-- PSYCH RESULT -->
+        <div id="psychResBox" class="hidden text-center space-y-6 py-6">
+          <div class="text-5xl">🎯</div>
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white">Assessment Completed!</h3>
+          <p id="psychScoreText" class="text-slate-600 dark:text-slate-300 font-medium text-sm"></p>
+          <button onclick="startPsychTest()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/35">Retake Psych Test</button>
         </div>
       </div>
-    </section>
+    </div>
 
   </main>
 
@@ -248,51 +293,87 @@
       }
     }
 
-    const questionBanks = {
-      behavioral: [
-        { q: "Tell me about yourself and your professional background.", tip: "Structure your answer using Present, Past, and Future. Highlight major achievements relevant to the target role in 1-2 minutes." },
-        { q: "What is your greatest professional weakness and how are you managing it?", tip: "Mention a genuine skill gap that is non-fatal to the role, followed by actionable steps you are taking to improve." },
-        { q: "Why do you want to work for our company?", tip: "Demonstrate thorough research into the company's mission, products, or culture and align them with your personal values." }
-      ],
-      technical: [
+    function switchAppMode(mode) {
+      if(mode === 'interview') {
+        document.getElementById('interviewAppContainer').classList.remove('hidden');
+        document.getElementById('psychometricAppContainer').classList.add('hidden');
+        document.getElementById('modeInterviewBtn').className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow";
+        document.getElementById('modePsychBtn').className = "px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition";
+      } else {
+        document.getElementById('interviewAppContainer').classList.add('hidden');
+        document.getElementById('psychometricAppContainer').classList.remove('hidden');
+        document.getElementById('modePsychBtn').className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow";
+        document.getElementById('modeInterviewBtn').className = "px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition";
+      }
+    }
+
+    // Dynamic handling of "Others" input fields
+    function handleIndustryChange() {
+      let val = document.getElementById('selectIndustry').value;
+      let custom = document.getElementById('customIndustry');
+      if(val === 'Others') custom.classList.remove('hidden');
+      else custom.classList.add('hidden');
+    }
+    function handleRoleChange() {
+      let val = document.getElementById('selectRole').value;
+      let custom = document.getElementById('customRole');
+      if(val === 'Others') custom.classList.remove('hidden');
+      else custom.classList.add('hidden');
+    }
+    function handleCompanyChange() {
+      let val = document.getElementById('selectCompany').value;
+      let custom = document.getElementById('customCompany');
+      if(val === 'Others') custom.classList.remove('hidden');
+      else custom.classList.add('hidden');
+    }
+
+    // Role-specific question banks adapting to selected position
+    const roleQuestionBanks = {
+      "Software Engineer": [
         { q: "How do you systematically debug a web application experiencing severe performance degradation?", tip: "Outline an analytical approach: review network request logs, inspect memory profilers, optimize database queries, and analyze error tracking." },
         { q: "Explain the architectural trade-offs between REST APIs and GraphQL in modern software engineering.", tip: "Focus on client-side flexibility, over-fetching/under-fetching data, and caching mechanisms." }
       ],
-      leadership: [
-        { q: "How do you handle an underperforming team member or friction within your cross-functional team?", tip: "Emphasize empathy, scheduling private 1-on-1 feedback sessions to identify root causes, and establishing clear performance milestones." },
-        { q: "Describe a situation when you had to make a critical decision under tight time constraints.", tip: "Use the STAR method (Situation, Task, Action, Result) to articulate your risk assessment and problem-solving skills." }
+      "Product Manager": [
+        { q: "How do you prioritize your product roadmap when stakeholder demands exceed engineering capacity?", tip: "Use data-driven frameworks like RICE (Reach, Impact, Confidence, Effort) and align priorities with core company metrics." },
+        { q: "Describe a time when a product launch failed or underperformed. What did you learn?", tip: "Highlight rapid feedback gathering, root cause analysis, and how you pivoted the product strategy accordingly." }
       ],
-      systemDesign: [
-        { q: "How would you design a scalable URL shortening service like Bit.ly?", tip: "Discuss traffic estimations, database choices (SQL vs NoSQL), hash generation algorithms, and Redis caching strategies." },
-        { q: "Design a real-time notification broadcasting system for millions of concurrent active users.", tip: "Incorporate WebSockets, message brokers (Kafka/RabbitMQ), and horizontal microservices scalability." }
+      "Data Analyst": [
+        { q: "How would you investigate an unexpected 20% drop in daily active users (DAU) over the weekend?", tip: "Structure your answer: verify data pipeline integrity, check for external seasonality factors, segment by user demographics, and isolate core metric drivers." },
+        { q: "Explain the difference between correlation and causation with a real-world business example.", tip: "Provide a clear illustration (e.g., ice cream sales and sunburns) and explain how controlled experiments or regression controls separate spurious links." }
+      ],
+      "Financial Analyst": [
+        { q: "Walk me through the three main financial statements and how they connect.", tip: "Explain Income Statement, Balance Sheet, and Cash Flow Statement linkage (e.g., net income flows into retained earnings and cash flow operating activities)." },
+        { q: "How would you evaluate whether a company should invest in a major capital expenditure project?", tip: "Discuss Net Present Value (NPV), Internal Rate of Return (IRR), payback period, and sensitivity risk analysis." }
+      ],
+      "Marketing Specialist": [
+        { q: "How do you measure the Return on Investment (ROI) of an omnichannel marketing campaign?", tip: "Discuss attribution models, Customer Acquisition Cost (CAC), Lifetime Value (LTV), and multi-touch conversion tracking." },
+        { q: "Describe your approach to launching a brand new product into a highly competitive market.", tip: "Highlight target audience persona definition, USP (Unique Selling Proposition) positioning, and multi-channel go-to-market execution." }
+      ],
+      "HR Generalist": [
+        { q: "How do you handle a severe conflict between two key employees that impacts team productivity?", tip: "Emphasize confidentiality, active listening via 1-on-1 mediation, objective policy enforcement, and establishing an actionable resolution plan." },
+        { q: "What strategies do you implement to reduce employee turnover in a high-stress corporate environment?", tip: "Discuss engagement surveys, competitive compensation reviews, structured career pathing, and management feedback loops." }
+      ],
+      "Operations Manager": [
+        { q: "How do you optimize supply chain bottlenecks during sudden supply shortages?", tip: "Talk about supplier diversification, safety stock buffering, lead time reduction, and agile logistical replanning." },
+        { q: "Describe a time when you implemented process automation that drastically improved operational efficiency.", tip: "Use the STAR method to detail the workflow inefficiency, the tool or system introduced, and quantifiable efficiency gains." }
       ]
     };
 
-    let currentCategory = 'behavioral';
-    let targetRole = 'Software Engineer';
-    let targetCompany = 'Google';
+    let selectedRoleFinal = 'Software Engineer';
+    let selectedCompanyFinal = 'Google';
     let qIndex = 0;
     let isRecording = false;
 
-    function selectCategory(cat) {
-      currentCategory = cat;
-      ['behavioral', 'technical', 'leadership', 'systemDesign'].forEach(c => {
-        let btn = document.getElementById(`cat-${c}`);
-        if(c === cat) {
-          btn.className = "px-4 py-2 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow-md transition";
-        } else {
-          btn.className = "px-4 py-2 rounded-xl text-xs font-extrabold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition";
-        }
-      });
-      document.getElementById('categoryTitle').innerText = cat.toUpperCase() + ' Interview Simulator';
-    }
-
     function startInterviewSession() {
-      targetRole = document.getElementById('inputRole').value || 'Professional';
-      targetCompany = document.getElementById('inputCompany').value || 'Target Company';
-      
-      document.getElementById('targetDetails').innerText = `Target Role: ${targetRole} | Company: ${targetCompany}`;
-      document.getElementById('targetBadge').innerText = `Interviewing for ${targetRole} at ${targetCompany}`;
+      let roleVal = document.getElementById('selectRole').value;
+      selectedRoleFinal = (roleVal === 'Others') ? (document.getElementById('customRole').value || 'Professional') : roleVal;
+
+      let compVal = document.getElementById('selectCompany').value;
+      selectedCompanyFinal = (compVal === 'Others') ? (document.getElementById('customCompany').value || 'Target Company') : compVal;
+
+      document.getElementById('targetDetails').innerText = `Role: ${selectedRoleFinal} | Company: ${selectedCompanyFinal}`;
+      document.getElementById('targetBadge').innerText = `Interviewing for ${selectedRoleFinal} at ${selectedCompanyFinal}`;
+      document.getElementById('sessionHeaderTitle').innerText = `${selectedRoleFinal} Interview Simulator`;
 
       qIndex = 0;
       document.getElementById('startScreen').classList.add('hidden');
@@ -308,8 +389,15 @@
       document.getElementById('qCount').innerText = 'Ready';
     }
 
+    function getActiveQuestions() {
+      return roleQuestionBanks[selectedRoleFinal] || [
+        { q: `Tell me about your experience and why you are suited for the ${selectedRoleFinal} position at ${selectedCompanyFinal}.`, tip: "Focus on core competencies, past professional achievements, and direct alignment with job description requirements." },
+        { q: "Describe a challenging project you managed and how you overcame obstacles.", tip: "Use the STAR method to outline the situation, your specific actions, and the measurable business outcome." }
+      ];
+    }
+
     function loadQuestion() {
-      let list = questionBanks[currentCategory];
+      let list = getActiveQuestions();
       if (qIndex >= list.length) {
         finishSession();
         return;
@@ -323,7 +411,7 @@
     }
 
     function submitAnswer() {
-      let list = questionBanks[currentCategory];
+      let list = getActiveQuestions();
       let item = list[qIndex];
       document.getElementById('explanationText').innerText = item.tip;
       document.getElementById('explanationBox').classList.remove('hidden');
@@ -338,13 +426,13 @@
       document.getElementById('quizBox').classList.add('hidden');
       document.getElementById('explanationBox').classList.add('hidden');
       document.getElementById('resBox').classList.remove('hidden');
-      document.getElementById('scoreText').innerText = `You have successfully completed the mock interview simulation for the ${targetRole} position at ${targetCompany}! Keep practicing to sharpen your delivery.`;
+      document.getElementById('scoreText').innerText = `You have successfully completed the mock interview simulation for ${selectedRoleFinal} at ${selectedCompanyFinal}! Keep practicing to sharpen your executive delivery.`;
     }
 
     function speakQuestion() {
       if ('speechSynthesis' in window) {
         let text = document.getElementById('qText').innerText;
-        if(!text) text = "Welcome to OmniInterview mock session.";
+        if(!text) text = "Welcome to OmniInterview session.";
         let utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.9;
         window.speechSynthesis.speak(utterance);
@@ -364,6 +452,98 @@
         btn.innerText = "🔴 Start Voice Recording";
         alert("Mock interview voice recording successfully saved locally!");
       }
+    }
+
+    // Psychometric Test Questions (Numerical & Logical Reasoning)
+    const psychQuestions = [
+      {
+        category: "Numerical Reasoning",
+        q: "A product originally priced at $120 is marked down by 25%. What is the final sale price?",
+        options: ["$85", "$90", "$95", "$100"],
+        answer: 1,
+        explanation: "25% of $120 is 0.25 * 120 = $30. Subtracting the discount: $120 - $30 = $90."
+      },
+      {
+        category: "Numerical Reasoning",
+        q: "If a company’s annual revenue increases from $2.0 million to $2.5 million, what is the percentage growth rate?",
+        options: ["15%", "20%", "25%", "30%"],
+        answer: 2,
+        explanation: "Growth amount = $2.5M - $2.0M = $0.5M. Percentage growth = (0.5 / 2.0) * 100 = 25%."
+      },
+      {
+        category: "Logical Reasoning",
+        q: "Find the next number in the logical sequence: 2, 6, 12, 20, 30, ?",
+        options: ["38", "40", "42", "46"],
+        answer: 2,
+        explanation: "Differences between terms increase by 2 sequentially: (+4, +6, +8, +10). Next difference is +12, so 30 + 12 = 42."
+      },
+      {
+        category: "Verbal & Deductive Logic",
+        q: "If all software engineers are problem solvers, and some problem solvers are excellent leaders, which statement must logically follow?",
+        options: ["All software engineers are excellent leaders", "Some software engineers may be excellent leaders", "No software engineers are leaders", "All leaders are software engineers"],
+        answer: 1,
+        explanation: "Deductive logic allows that some subset of problem solvers who are leaders can overlap with software engineers, making 'some software engineers may be excellent leaders' valid."
+      }
+    ];
+
+    let psychIdx = 0;
+    let psychScore = 0;
+
+    function startPsychTest() {
+      psychIdx = 0;
+      psychScore = 0;
+      document.getElementById('psychStartScreen').classList.add('hidden');
+      document.getElementById('psychResBox').classList.add('hidden');
+      document.getElementById('psychQuizBox').classList.remove('hidden');
+      loadPsychQuestion();
+    }
+
+    function loadPsychQuestion() {
+      if (psychIdx >= psychQuestions.length) {
+        finishPsychTest();
+        return;
+      }
+      let item = psychQuestions[psychIdx];
+      document.getElementById('psychCount').innerText = `Question ${psychIdx + 1} of ${psychQuestions.length}`;
+      document.getElementById('psychCategoryTag').innerText = item.category;
+      document.getElementById('psychQText').innerText = item.q;
+      document.getElementById('psychExplanationBox').classList.add('hidden');
+      document.getElementById('psychQuizBox').classList.remove('hidden');
+
+      let box = document.getElementById('psychOptsBox');
+      box.innerHTML = '';
+      item.options.forEach((opt, i) => {
+        let btn = document.createElement('button');
+        btn.className = "w-full text-left p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-800 hover:border-indigo-300 font-medium text-xs transition shadow-sm";
+        btn.innerText = opt;
+        btn.onclick = () => checkPsychAnswer(i, item.answer, item.explanation);
+        box.appendChild(btn);
+      });
+    }
+
+    function checkPsychAnswer(selected, correct, explanation) {
+      if (selected === correct) psychScore++;
+      let buttons = document.getElementById('psychOptsBox').getElementsByTagName('button');
+      for(let i=0; i<buttons.length; i++) {
+        buttons[i].disabled = true;
+        if(i === correct) buttons[i].classList.add('bg-emerald-100', 'dark:bg-emerald-950', 'border-emerald-400');
+        else if(i === selected) buttons[i].classList.add('bg-rose-100', 'dark:bg-rose-950', 'border-rose-400');
+      }
+      document.getElementById('psychExplanationText').innerText = explanation;
+      document.getElementById('psychExplanationBox').classList.remove('hidden');
+    }
+
+    function nextPsychQuestion() {
+      psychIdx++;
+      loadPsychQuestion();
+    }
+
+    function finishPsychTest() {
+      document.getElementById('psychQuizBox').classList.add('hidden');
+      document.getElementById('psychExplanationBox').classList.add('hidden');
+      document.getElementById('psychResBox').classList.remove('hidden');
+      let percentage = (psychScore / psychQuestions.length) * 100;
+      document.getElementById('psychScoreText').innerText = `You scored ${psychScore} out of ${psychQuestions.length} correct (${percentage}%). This benchmark reflects competitive analytical and numerical aptitude for corporate placement.`;
     }
   </script>
 </body>
