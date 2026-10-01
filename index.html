@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- SEO Meta Tags -->
-  <title>OmniInterview - Free Job Interview Simulator & Career Prep Platform</title>
-  <meta name="description" content="Practice common job interview questions, simulate real-time interview timers, record your answers, and boost your hiring success.">
-  <meta name="keywords" content="job interview simulator, interview practice questions, mock interview app, career prep platform">
+  <title>OmniInterview - AI-Powered Job Interview Simulator & Career Prep Platform</title>
+  <meta name="description" content="Practice common job interview questions tailored to specific roles and companies, simulate real-time timers, record answers, and boost your hiring success.">
+  <meta name="keywords" content="job interview simulator, mock interview practice, hr interview questions, tech interview prep, behavioral interview app">
   <meta name="author" content="OmniInterview Editorial Team">
   <meta name="robots" content="index, follow">
   <meta name="geo.region" content="US">
@@ -97,7 +97,7 @@
         Ace Your Next Job Interview <span class="gradient-text">with Confidence.</span>
       </h1>
       <p class="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto font-medium">
-        Pilih kategori wawancara, dengarkan pertanyaan dari pewawancara virtual, rekam jawaban Anda, dan pelajari contoh jawaban terbaik.
+        Select your target role and company, listen to interview questions, practice your responses, and review expert evaluation benchmarks.
       </p>
     </div>
 
@@ -114,7 +114,7 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 dark:border-slate-700 pb-4 gap-3">
         <div>
           <h2 id="categoryTitle" class="font-extrabold text-base text-slate-900 dark:text-white">Behavioral Interview Simulator</h2>
-          <p class="text-xs text-slate-500">Pertanyaan umum wawancara HR & Budaya Perusahaan</p>
+          <p id="targetDetails" class="text-xs text-slate-500">Target Role: Software Engineer | Company: Google</p>
         </div>
         <div class="flex items-center gap-3">
           <button onclick="speakQuestion()" class="flex items-center gap-1 text-xs font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition">
@@ -124,49 +124,63 @@
         </div>
       </div>
 
-      <!-- START SCREEN -->
-      <div id="startScreen" class="text-center py-10 space-y-5">
-        <div class="text-5xl">🎙️</div>
-        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Siap Memulai Simulasi Wawancara?</h3>
-        <p class="text-xs text-slate-500 max-w-md mx-auto">Sistem akan menyajikan serangkaian pertanyaan berbasis skenario nyata. Anda dapat merekam atau mencatat jawaban Anda untuk setiap pertanyaan.</p>
-        <button onclick="startInterviewSession()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/30">Mulai Sesi Wawancara</button>
+      <!-- START SCREEN WITH CUSTOM ROLE & COMPANY INPUT -->
+      <div id="startScreen" class="text-center py-8 space-y-6 max-w-lg mx-auto">
+        <div class="text-5xl">🎯</div>
+        <div class="space-y-2">
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Customize Your Mock Interview</h3>
+          <p class="text-xs text-slate-500">Enter your target job title and company to tailor the simulation experience.</p>
+        </div>
+        
+        <div class="space-y-4 text-left">
+          <div>
+            <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Job Title / Role:</label>
+            <input type="text" id="inputRole" value="Software Engineer" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Company:</label>
+            <input type="text" id="inputCompany" value="Google" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+          </div>
+        </div>
+
+        <button onclick="startInterviewSession()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/30">Start Customized Mock Interview</button>
       </div>
 
       <!-- ACTIVE INTERVIEW BOX -->
       <div id="quizBox" class="hidden space-y-6">
         <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-slate-900/50 border border-indigo-100 dark:border-slate-800">
-          <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Pertanyaan Pewawancara</span>
+          <span id="targetBadge" class="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Interviewer Prompt</span>
           <h3 id="qText" class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-1"></h3>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-bold text-slate-500 block">Catatan / Jawaban Anda (Metode STAR - Situation, Task, Action, Result):</label>
-          <textarea id="userAnswerInput" rows="4" placeholder="Tuliskan poin-poin jawaban Anda di sini..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"></textarea>
+          <label class="text-xs font-bold text-slate-500 block">Your Answer / Notes (STAR Method - Situation, Task, Action, Result):</label>
+          <textarea id="userAnswerInput" rows="4" placeholder="Type your structured talking points here..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"></textarea>
         </div>
 
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
           <button onclick="toggleRecordMock()" id="recordBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 border border-rose-200 text-xs font-extrabold hover:bg-rose-100 transition">
-            🔴 Mulai Rekam Audio Lisan
+            🔴 Start Voice Recording
           </button>
-          <button onclick="submitAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-md">Kirim & Lihat Tips Jawaban →</button>
+          <button onclick="submitAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-md">Submit & View Tips →</button>
         </div>
       </div>
 
       <!-- FEEDBACK / TIPS BANNER -->
       <div id="explanationBox" class="hidden p-5 rounded-2xl bg-emerald-50/70 dark:bg-slate-900/80 border border-emerald-200 dark:border-emerald-900 space-y-2">
         <div class="flex items-center gap-2 font-bold text-xs text-emerald-700 dark:text-emerald-300">
-          <span>💡</span> Panduan Jawaban Terbaik (Contoh Evaluasi Rekrutmen):
+          <span>💡</span> Expert Answer Benchmark & Tips:
         </div>
         <p id="explanationText" class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
-        <button onclick="nextQuestion()" class="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition">Pertanyaan Selanjutnya →</button>
+        <button onclick="nextQuestion()" class="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition">Next Question →</button>
       </div>
 
       <!-- FINISH SCREEN -->
       <div id="resBox" class="hidden text-center space-y-6 py-6">
         <div class="text-5xl">🏆</div>
-        <h3 class="text-2xl font-black text-slate-900 dark:text-white">Sesi Wawancara Selesai!</h3>
+        <h3 class="text-2xl font-black text-slate-900 dark:text-white">Interview Session Completed!</h3>
         <p id="scoreText" class="text-slate-600 dark:text-slate-300 font-medium text-sm"></p>
-        <button onclick="resetToStartScreen()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/30">Mulai Sesi Baru</button>
+        <button onclick="resetToStartScreen()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-xs transition shadow-lg shadow-indigo-500/30">Start New Session</button>
       </div>
     </div>
 
@@ -174,19 +188,19 @@
     <section id="study-guides" class="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-6">
       <div class="text-center space-y-2">
         <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Expert Resources</span>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">Panduan & Tips Wawancara Karier</h2>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">Career Guides & Interview Tips</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
         <!-- Artikel 1 -->
-        <div class="pastel-card p-6 rounded-3xl flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer border border-slate-200 group" onclick="alert('Artikel panduan lengkap metode STAR tersedia di sistem.')">
+        <div class="pastel-card p-6 rounded-3xl flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer border border-slate-200 group" onclick="alert('Full STAR method masterclass guide loaded.')">
           <div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">Interview Masterclass</span>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white mt-2 group-hover:text-indigo-600 transition">Cara Menjawab Pertanyaan "Ceritakan Tentang Diri Anda" Menggunakan Metode STAR</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">Pelajari formula terstruktur untuk memberikan kesan profesional pertama yang memukau kepada HRD.</p>
+            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">Masterclass</span>
+            <h3 class="text-base font-extrabold text-slate-900 dark:text-white mt-2 group-hover:text-indigo-600 transition">How to Master Behavioral Questions Using the STAR Method</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">Learn the structured framework to deliver compelling, impactful stories during HR and hiring manager interviews.</p>
           </div>
           <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-extrabold text-indigo-600 dark:text-indigo-400">
-            <span>Baca Selengkapnya →</span>
+            <span>Read Guide →</span>
             <span>5 min read</span>
           </div>
         </div>
@@ -194,12 +208,12 @@
         <!-- Artikel 2 -->
         <div class="pastel-card p-6 rounded-3xl flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer border border-slate-200 group" onclick="window.open('https://outlierkit.com/ref/8FNGN6', '_blank')">
           <div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300">Productivity & Workflow</span>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white mt-2 group-hover:text-violet-600 transition">Optimalkan Manajemen Lamaran Kerja & Portofolio Anda</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">Kelola jadwal interview dan progres karier Anda menggunakan perangkat manajemen profesional dari OutlierKit.</p>
+            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300">Productivity Partner</span>
+            <h3 class="text-base font-extrabold text-slate-900 dark:text-white mt-2 group-hover:text-violet-600 transition">Streamline Your Job Applications & Interview Schedules</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">Manage your career pipeline and interview prep tasks efficiently using professional workflows from OutlierKit.</p>
           </div>
           <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-extrabold text-violet-600 dark:text-violet-400">
-            <span>Kunjungi OutlierKit (Afiliasi) →</span>
+            <span>Explore OutlierKit →</span>
             <span>Partner</span>
           </div>
         </div>
@@ -236,27 +250,28 @@
 
     const questionBanks = {
       behavioral: [
-        { q: "Ceritakan tentang diri Anda dan latar belakang profesional Anda.", tip: "Gunakan formula Present, Past, dan Future. Soroti pencapaian relevan dalam 1-2 menit." },
-        { q: "Apa kelemahan terbesar Anda dan bagaimana Anda mengatasinya?", tip: "Sebutkan kelemahan nyata yang tidak bersifat fatal untuk posisi tersebut, lalu jelaskan langkah konkret yang Anda ambil untuk memperbaikinya." },
-        { q: "Mengapa Anda tertarik bekerja di perusahaan kami?", tip: "Tunjukkan bahwa Anda telah meriset misi, produk, atau budaya perusahaan dan hubungkan dengan nilai pribadi Anda." }
+        { q: "Tell me about yourself and your professional background.", tip: "Structure your answer using Present, Past, and Future. Highlight major achievements relevant to the target role in 1-2 minutes." },
+        { q: "What is your greatest professional weakness and how are you managing it?", tip: "Mention a genuine skill gap that is non-fatal to the role, followed by actionable steps you are taking to improve." },
+        { q: "Why do you want to work for our company?", tip: "Demonstrate thorough research into the company's mission, products, or culture and align them with your personal values." }
       ],
       technical: [
-        { q: "Bagaimana cara Anda mendebug aplikasi web yang mengalami penurunan performa secara drastis?", tip: "Jelaskan pendekatan sistematis: cek network logs, profiler memori, optimasi query database, dan analisis error tracking." },
-        { q: "Jelaskan perbedaan antara REST API dan GraphQL dalam pengembangan perangkat lunak modern.", tip: "Fokus pada fleksibilitas *over-fetching/under-fetching* data dan efisiensi *endpoint*." }
+        { q: "How do you systematically debug a web application experiencing severe performance degradation?", tip: "Outline an analytical approach: review network request logs, inspect memory profilers, optimize database queries, and analyze error tracking." },
+        { q: "Explain the architectural trade-offs between REST APIs and GraphQL in modern software engineering.", tip: "Focus on client-side flexibility, over-fetching/under-fetching data, and caching mechanisms." }
       ],
       leadership: [
-        { q: "Bagaimana cara Anda menghadapi anggota tim yang kinerjanya menurun atau sulit diajak bekerja sama?", tip: "Gunakan pendekatan empatik, adakan sesi 1-on-1 privat untuk mencari akar permasalahan, dan berikan dukungan konstruktif." },
-        { q: "Ceritakan situasi ketika Anda harus mengambil keputusan sulit di bawah tekanan waktu yang ketat.", tip: "Gunakan metode STAR (Situation, Task, Action, Result) untuk menguraikan tindakan analitis Anda." }
+        { q: "How do you handle an underperforming team member or friction within your cross-functional team?", tip: "Emphasize empathy, scheduling private 1-on-1 feedback sessions to identify root causes, and establishing clear performance milestones." },
+        { q: "Describe a situation when you had to make a critical decision under tight time constraints.", tip: "Use the STAR method (Situation, Task, Action, Result) to articulate your risk assessment and problem-solving skills." }
       ],
       systemDesign: [
-        { q: "Bagaimana cara merancang sistem skala besar seperti URL Shortener (misal: Bit.ly)?", tip: "Bahasan harus mencakup estimasi trafik, pemilihan database (NoSQL vs SQL), algoritma hashing, dan strategi caching (Redis)." },
-        { q: "Rancang sistem notifikasi real-time untuk jutaan pengguna aktif secara bersamaan.", tip: "Diskusikan penggunaan WebSocket, message broker (RabbitMQ/Kafka), dan arsitektur microservices." }
+        { q: "How would you design a scalable URL shortening service like Bit.ly?", tip: "Discuss traffic estimations, database choices (SQL vs NoSQL), hash generation algorithms, and Redis caching strategies." },
+        { q: "Design a real-time notification broadcasting system for millions of concurrent active users.", tip: "Incorporate WebSockets, message brokers (Kafka/RabbitMQ), and horizontal microservices scalability." }
       ]
     };
 
     let currentCategory = 'behavioral';
+    let targetRole = 'Software Engineer';
+    let targetCompany = 'Google';
     let qIndex = 0;
-    let scoreCount = 0;
     let isRecording = false;
 
     function selectCategory(cat) {
@@ -270,23 +285,27 @@
         }
       });
       document.getElementById('categoryTitle').innerText = cat.toUpperCase() + ' Interview Simulator';
-      resetToStartScreen();
+    }
+
+    function startInterviewSession() {
+      targetRole = document.getElementById('inputRole').value || 'Professional';
+      targetCompany = document.getElementById('inputCompany').value || 'Target Company';
+      
+      document.getElementById('targetDetails').innerText = `Target Role: ${targetRole} | Company: ${targetCompany}`;
+      document.getElementById('targetBadge').innerText = `Interviewing for ${targetRole} at ${targetCompany}`;
+
+      qIndex = 0;
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('quizBox').classList.remove('hidden');
+      loadQuestion();
     }
 
     function resetToStartScreen() {
-      qIndex = 0;
-      scoreCount = 0;
       document.getElementById('startScreen').classList.remove('hidden');
       document.getElementById('quizBox').classList.add('hidden');
       document.getElementById('explanationBox').classList.add('hidden');
       document.getElementById('resBox').classList.add('hidden');
       document.getElementById('qCount').innerText = 'Ready';
-    }
-
-    function startInterviewSession() {
-      document.getElementById('startScreen').classList.add('hidden');
-      document.getElementById('quizBox').classList.remove('hidden');
-      loadQuestion();
     }
 
     function loadQuestion() {
@@ -296,7 +315,7 @@
         return;
       }
       let item = list[qIndex];
-      document.getElementById('qCount').innerText = `Pertanyaan ${qIndex + 1} dari ${list.length}`;
+      document.getElementById('qCount').innerText = `Question ${qIndex + 1} of ${list.length}`;
       document.getElementById('qText').innerText = item.q;
       document.getElementById('userAnswerInput').value = '';
       document.getElementById('explanationBox').classList.add('hidden');
@@ -308,7 +327,6 @@
       let item = list[qIndex];
       document.getElementById('explanationText').innerText = item.tip;
       document.getElementById('explanationBox').classList.remove('hidden');
-      scoreCount++;
     }
 
     function nextQuestion() {
@@ -320,18 +338,18 @@
       document.getElementById('quizBox').classList.add('hidden');
       document.getElementById('explanationBox').classList.add('hidden');
       document.getElementById('resBox').classList.remove('hidden');
-      document.getElementById('scoreText').innerText = `Anda telah berhasil menyelesaikan ${qIndex} simulasi pertanyaan untuk kategori ${currentCategory.toUpperCase()}. Teruslah berlatih untuk meningkatkan kelancaran komunikasi Anda!`;
+      document.getElementById('scoreText').innerText = `You have successfully completed the mock interview simulation for the ${targetRole} position at ${targetCompany}! Keep practicing to sharpen your delivery.`;
     }
 
     function speakQuestion() {
       if ('speechSynthesis' in window) {
         let text = document.getElementById('qText').innerText;
-        if(!text) text = "Selamat datang di simulasi wawancara kerja OmniInterview.";
+        if(!text) text = "Welcome to OmniInterview mock session.";
         let utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.9;
         window.speechSynthesis.speak(utterance);
       } else {
-        alert('Fitur suara tidak didukung di peramban ini.');
+        alert('Speech synthesis is not supported in this browser.');
       }
     }
 
@@ -340,11 +358,11 @@
       let btn = document.getElementById('recordBtn');
       if(isRecording) {
         btn.className = "flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 border border-emerald-200 text-xs font-extrabold hover:bg-emerald-100 transition animate-pulse";
-        btn.innerText = "⏹️ Sedang Merekam Suara... (Klik untuk Berhenti)";
+        btn.innerText = "⏹️ Recording Audio... (Click to Stop)";
       } else {
         btn.className = "flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 border border-rose-200 text-xs font-extrabold hover:bg-rose-100 transition";
-        btn.innerText = "🔴 Mulai Rekam Audio Lisan";
-        alert("Rekaman simulasi jawaban Anda berhasil disimpan secara lokal!");
+        btn.innerText = "🔴 Start Voice Recording";
+        alert("Mock interview voice recording successfully saved locally!");
       }
     }
   </script>
